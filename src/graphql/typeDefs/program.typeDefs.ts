@@ -1,24 +1,31 @@
 export const programTypeDefs = `#graphql
 scalar Date
 type Program {
-    id:Int
-    programName:String
-    scheduledDate:Date
-    totalTickets:Int
-    availableTickets:Int
+    id: Int
+    programName: String
+    counts: Int
+    seats: Int
 }
 type ProgramResponse {
-    data:Program
-    message:String
+    data: Program
+    message: String
 }
 input CreateProgramInput {
-    programName:String
+    programName: String
+}
+input UpdateProgramInput {
+    programName: String
+}
+input DeleteProgramInput {
+    programName: String
 }
 type Query {
-    programs:[Program]
+    programs: [Program]
 }
 type Mutation {
-    createProgram(input:CreateProgramInput):ProgramResponse
+    createProgram(input: CreateProgramInput): ProgramResponse
+    updateProgram(input: UpdateProgramInput): ProgramResponse
+    deleteProgram(input: DeleteProgramInput): ProgramResponse
 }
 
-`
+`;

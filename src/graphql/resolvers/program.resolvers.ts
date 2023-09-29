@@ -6,13 +6,22 @@ export const programResolver = {
   Query: {
     programs: async (parents: any, args: any, context: MyContext) => {
       try {
-        if (!context.user) {
-          throw new Error("Authorization header missing");
+        if (!context?.user) {
+          throw new GraphQLError("Authorization header missing", {
+            extensions: {
+              code: "UNAUTHORIZATION",
+              http: {
+                status: 401,
+                message: "Authorization header is missing",
+              },
+            },
+          });
         }
         const allPrograms = await Program.findAll();
+        console.log(allPrograms)
         return allPrograms;
-      } catch (error) {
-        throw new Error("Cannot fetch all programs");
+      } catch (error:any) {
+        throw new Error(error.message);
       }
     },
   },
@@ -23,8 +32,8 @@ export const programResolver = {
       context: MyContext
     ) => {
       try {
-        if (!context?.user) {
-          throw new GraphQLError("the error message:", {
+        if (!context.user) {
+          throw new GraphQLError("Authorization header is missing", {
             extensions: {
               code: "UNAUTHORIZATION",
               http: {
@@ -37,12 +46,90 @@ export const programResolver = {
         const { programName } = args.input;
         const newProgram = await Program.create({
           programName,
-          userId:context.user.id
+          userId: context.user.id,
         });
-        console.log(newProgram);
         return {
           data: newProgram,
           message: "Added new title for program",
+        };
+      } catch (error: any) {
+        throw new Error(error.message);
+      }
+    },
+    updateProgram: async (
+      parents: any,
+      args: { input: ProgramInputInterface },
+      context: MyContext
+    ) => {
+      try {
+        if (!context?.user) {
+          throw new GraphQLError("Authorization header is missing", {
+            extensions:{
+              code:"UNAUTHORIZATION",
+              status:401,
+              message:"Authorization header is missing"
+            }
+          });
+        }
+        const { id, programName } = args.input;
+        const newDate = { id, programName };
+        const updateProgram = await Program.update(newDate, { where: { id } });
+        if (!updateProgram) {
+          throw new GraphQLError("Program not found", {
+            extensions: {
+              code: "NOT FOUND",
+              http: {
+                status: 404,
+                message: "Program is not found to update",
+              },
+            },
+          });
+        }
+
+        return {
+          newDate,
+          message: "pragram has been updated sucessfully",
+        };
+      } catch (error: any) {
+        throw new Error(error.message);
+      }
+    },
+
+    deleteProgram: async (
+      parents: any,
+      args: { input: ProgramInputInterface },
+      context: MyContext
+    ) => {
+      try {
+        if (!context?.user) {
+          throw new GraphQLError("Authorization header is missing", {
+            extensions: {
+              code: "UNAUTHORIZATION",
+              http: {
+                status: 401,
+                message: "Authorization header is missing",
+              },
+            },
+          });
+        }
+        const { id } = args.input;
+        const deleteProgram = await Program.findOne({ where: { id } });
+
+        if (!deleteProgram) {
+          throw new GraphQLError("Program not found", {
+            extensions: {
+              code: "NOT FOUND",
+              http: {
+                status: 404,
+                message: "Program not found to delete",
+              },
+            },
+          });
+        }
+        await deleteProgram.destroy();
+        return {
+          data: deleteProgram,
+          message: `program with programId ${id} is deleted sucessfully`,
         };
       } catch (error: any) {
         throw new Error(error.message);

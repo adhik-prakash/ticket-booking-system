@@ -6,10 +6,11 @@ import {
 } from "../interface/userInterface";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { MyContext } from "../interface/contextInterface";
 
 export const userResolver = {
   Query: {
-    users: async () => {
+    users: async (parents:any,args:any,contrxt:MyContext) => {
       return await User.findAll();
     },
   },
@@ -19,17 +20,16 @@ export const userResolver = {
       try {
         const checkMail = await User.findOne({ where: { email: email } });
         if (checkMail)
-          throw new GraphQLError("the error message", {
+          throw new GraphQLError("Email Already Exists", {
             extensions: {
               code: "EMAIL_ALREADY_EXISTS",
               http: {
-                status: 409,
+                status: 400,
                 message: "email already exits",
               },
             },
           });
         const hashedPassword = await bcrypt.hash(password, 12);
-
         const newuser = await User.create({
           userName,
           email,
@@ -41,6 +41,7 @@ export const userResolver = {
           message: "User registered succesfully",
         };
       } catch (error: any) {
+        console.log(error)
         throw new Error(error.message);
       }
     },
@@ -65,7 +66,7 @@ export const userResolver = {
           id: userLogin?.dataValues?.id,
         };
         const token = jwt.sign(payload, process.env.JWT_SECRET_KEY!, {
-          expiresIn: "1d",
+          expiresIn: "2d",
         });
 // console.log(payload)
         return {

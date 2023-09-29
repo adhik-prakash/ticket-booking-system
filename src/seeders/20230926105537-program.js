@@ -1,24 +1,44 @@
 module.exports = {
-  async up(queryInterface, Sequelize) {
-      const programs = [];
-    for (let i = 1; i <= 20; i++) {
-      programs.push({
-        name: "Arjit Singh Concert",
-        price: parseInt((Math.random() * 1000)), // Random price between 0 and 1000
-        category: ['Silver', 'Gold', 'Platinum'][Math.floor(Math.random() * 3)],
-        user_id: Math.floor(Math.random() * 2) + 5, // Random user ID between 5 and 6
-        created_at: new Date(),
-        updated_at: new Date(),
-      });
-    }
-    const columns = Object.keys(programs[0]);
-    const values = programs.map(programs => Object.values(programs));
-    await queryInterface.bulkInsert('programs', values.map((value) => Object.assign({}, ...columns.map((col, index) => ({
-      [col]: value[index]
-    })))));
-    
+  up: (queryInterface, Sequelize) => {
+    return queryInterface.bulkInsert('programs', [{
+      id: 1,
+      program_name: 'Bryan Adams Concert',
+      user_id:2,
+      category:"SILVER",
+      seats:10,
+      created_at: new Date(),
+      updated_at: new Date()
+    }, 
+    {
+      id: 2,
+      program_name: 'Sabin Rai Concert',
+      user_id:2,
+      category:"SILVER",
+      seats:20,
+      created_at: new Date(),
+      updated_at: new Date()
+    },
+    {
+      id: 3,
+      program_name: 'Anuprastha Concert',
+      user_id:2,
+      category:"SILVER",
+      seats:30,
+      created_at: new Date(),
+      updated_at: new Date()
+    },
+    {
+      id:4,
+      program_name: 'Nabin K Bhattrai concert',
+      user_id:2,
+      category:"SILVER",
+      seats:30,
+      created_at: new Date(),
+      updated_at: new Date()
+    }])
   },
+  
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('users', null, {});
+    return queryInterface.bulkDelete('programs', null, {});
   }
 };

@@ -1,12 +1,14 @@
 import { GraphQLError } from "graphql"
 import jwt from "jsonwebtoken"
+import "dotenv/config"
 
 export const authenticate = async(token:string)=>{
+
     try{
         if(token){
             try{
-            const user = jwt.verify(token,process.env.JWT_SECREY_KEY!)
-            console.log(user)
+            const user = jwt.verify(token,process.env.JWT_SECRET_KEY!)
+            // console.log(user)
             if(user){
                 return {
                     user,
