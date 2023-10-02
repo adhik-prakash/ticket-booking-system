@@ -1,4 +1,3 @@
-import { CategoryEnum } from "../../enum/categoryEnum";
 import { GraphQLError } from "graphql";
 import { MyContext } from "../interface/contextInterface";
 import { TicketEntry } from "../../models/ticketsenrty";
@@ -50,7 +49,35 @@ export const ticketResolver = {
           });
         }
         const { programId, counts } = args.input;
+
+        const existingTicketEntry = await TicketEntry.findOne({
+          where: {
+            programId,
+            userId: context.user.id,
+          },
+        });
         const programData = await Program.findByPk(programId);
+
+        if (!programData) {
+          throw new Error("program data is not found");
+        }
+        if (existingTicketEntry) {
+          if (programData.dataValues.available_seats < counts) {
+            throw new Error("Seats are Housefull please try another Program");
+          }
+          let newCounts = existingTicketEntry.dataValues.counts + counts;
+          await existingTicketEntry.update({
+            counts: newCounts,
+          });
+          await programData.decrement("available_seats", {
+            by: counts,
+          });
+
+          return {
+            data: existingTicketEntry,
+            message: "You have updated your ticket count sucessfully",
+          };
+        }
         // console.log(programData);
 
         if (!programData) {
@@ -65,7 +92,7 @@ export const ticketResolver = {
             }
           );
         }
-        if (programData.dataValues.seats < counts) {
+        if (programData.dataValues.available_seats < counts) {
           throw new Error("Seats are Housefull please try another Program");
         }
         const ticketEntry = await TicketEntry.create({
@@ -73,7 +100,9 @@ export const ticketResolver = {
           userId: context?.user.id,
           counts,
         });
-        // await programData.decrement("seats", { by: counts });
+        console.log("helow world");
+
+        await programData.decrement("available_seats", { by: counts });
         return {
           data: ticketEntry,
           message: "You have succesfully booked ticket",

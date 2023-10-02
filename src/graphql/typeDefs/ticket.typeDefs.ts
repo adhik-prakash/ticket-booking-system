@@ -7,7 +7,7 @@ type TicketEntry {
 }
 type Program {
     id: Int
-    category: CategoryEnum
+    # category: CategoryEnum
     }
 type BookingResponse {
     data: TicketEntry
@@ -22,16 +22,10 @@ input TicketInput {
     programId: Int
     counts: Int
 }
-enum CategoryEnum {
-    SILVER,
-    GOLD,
-    PLATINUM
-}
-
 type Query {
     tickets: [TicketEntry]
 }
 type Mutation {
     bookTicket(input: TicketInput): BookingResponse
 }
-`
+`;
