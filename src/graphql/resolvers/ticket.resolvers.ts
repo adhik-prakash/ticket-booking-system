@@ -78,8 +78,6 @@ export const ticketResolver = {
             message: "You have updated your ticket count sucessfully",
           };
         }
-        // console.log(programData);
-
         if (!programData) {
           throw new GraphQLError(
             "This program  is not found please try another program",
@@ -100,8 +98,6 @@ export const ticketResolver = {
           userId: context?.user.id,
           counts,
         });
-        console.log("helow world");
-
         await programData.decrement("available_seats", { by: counts });
         return {
           data: ticketEntry,
