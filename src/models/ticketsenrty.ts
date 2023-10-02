@@ -22,29 +22,25 @@ export const TicketEntry = sequelize.define(
         key: "id",
       },
     },
-   
-    counts: {
-      allowNull:false,
-      type:DataTypes.INTEGER
 
-    }
+    counts: {
+      allowNull: false,
+      type: DataTypes.INTEGER,
+    },
   },
   {
     timestamps: true,
     underscored: true,
-    tableName:"ticketsenrty",
-    freezeTableName:true
+    tableName: "ticketsenrty",
+    freezeTableName: true,
   }
 );
 
-TicketEntry.belongsTo(Program,{
-  foreignKey:"programId",
-  as:"program"
-  
-})
-Program.hasMany(TicketEntry,{
-  foreignKey:"programId",
-  as:"tickets"
-})
-
-
+TicketEntry.belongsTo(Program, {
+  foreignKey: "programId",
+  as: "program",
+});
+Program.hasMany(TicketEntry, {
+  foreignKey: "programId",
+  as: "tickets",
+});

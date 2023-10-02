@@ -13,14 +13,14 @@ const initApp = async () => {
   await sequelize.authenticate();
   console.log("Db connection succesfull");
   const server = new ApolloServer({
-    typeDefs:[userTypeDefs,programTypeDefs,ticketTypeDefs],
-    resolvers: [userResolver,programResolver,ticketResolver],
-    introspection:true
+    typeDefs: [userTypeDefs, programTypeDefs, ticketTypeDefs],
+    resolvers: [userResolver, programResolver, ticketResolver],
+    introspection: true,
   });
 
   const { url } = await startStandaloneServer(server, {
-    listen: { port: 4000 },
-    context:MyContext
+    listen: { port: 8080 },
+    context: MyContext,
   });
   console.log(`🚀  Server ready at: ${url}`);
 };

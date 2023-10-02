@@ -10,12 +10,15 @@ import { MyContext } from "../interface/contextInterface";
 
 export const userResolver = {
   Query: {
-    users: async (parents:any,args:any,contrxt:MyContext) => {
+    users: async (parent: ParentNode, args: any, contrxt: MyContext) => {
       return await User.findAll();
     },
   },
   Mutation: {
-    register: async (parents: any, args: { input: RegisterInputInterface }) => {
+    register: async (
+      parent: ParentNode,
+      args: { input: RegisterInputInterface }
+    ) => {
       const { userName, email, password, confirmPassword } = args.input;
       try {
         const checkMail = await User.findOne({ where: { email: email } });
@@ -41,11 +44,11 @@ export const userResolver = {
           message: "User registered succesfully",
         };
       } catch (error: any) {
-        console.log(error)
+        console.log(error);
         throw new Error(error.message);
       }
     },
-    login: async (parents: any, args: { input: LoginInputInterface }) => {
+    login: async (parent: ParentNode, args: { input: LoginInputInterface }) => {
       const { email, password } = args.input;
       try {
         const userLogin = await User.findOne({ where: { email: email } });
@@ -68,7 +71,7 @@ export const userResolver = {
         const token = jwt.sign(payload, process.env.JWT_SECRET_KEY!, {
           expiresIn: "2d",
         });
-// console.log(payload)
+        // console.log(payload)
         return {
           ...userLogin.dataValues,
           token,

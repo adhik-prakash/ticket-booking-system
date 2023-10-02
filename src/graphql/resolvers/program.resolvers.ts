@@ -4,7 +4,7 @@ import { ProgramInputInterface } from "../interface/programInterface";
 import { MyContext } from "../interface/contextInterface";
 export const programResolver = {
   Query: {
-    programs: async (parents: any, args: any, context: MyContext) => {
+    programs: async (parent: ParentNode, args: any, context: MyContext) => {
       try {
         if (!context?.user) {
           throw new GraphQLError("Authorization header missing", {
@@ -18,16 +18,16 @@ export const programResolver = {
           });
         }
         const allPrograms = await Program.findAll();
-        console.log(allPrograms)
+        // console.log(allPrograms);
         return allPrograms;
-      } catch (error:any) {
+      } catch (error: any) {
         throw new Error(error.message);
       }
     },
   },
   Mutation: {
     createProgram: async (
-      parents: any,
+      parent: ParentNode,
       args: { input: ProgramInputInterface },
       context: MyContext
     ) => {
@@ -57,18 +57,18 @@ export const programResolver = {
       }
     },
     updateProgram: async (
-      parents: any,
+      parent: ParentNode,
       args: { input: ProgramInputInterface },
       context: MyContext
     ) => {
       try {
         if (!context?.user) {
           throw new GraphQLError("Authorization header is missing", {
-            extensions:{
-              code:"UNAUTHORIZATION",
-              status:401,
-              message:"Authorization header is missing"
-            }
+            extensions: {
+              code: "UNAUTHORIZATION",
+              status: 401,
+              message: "Authorization header is missing",
+            },
           });
         }
         const { id, programName } = args.input;
@@ -96,7 +96,7 @@ export const programResolver = {
     },
 
     deleteProgram: async (
-      parents: any,
+      parent: ParentNode,
       args: { input: ProgramInputInterface },
       context: MyContext
     ) => {

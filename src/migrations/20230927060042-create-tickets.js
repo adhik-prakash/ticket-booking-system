@@ -21,16 +21,15 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
       },
-      user_id:{
+      user_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        references:{
+        references: {
           model: "users",
-          key:"id"
-        }
-
+          key: "id",
+        },
       },
-    
+
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

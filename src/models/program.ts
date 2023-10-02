@@ -19,16 +19,16 @@ export const Program = sequelize.define(
       allowNull: false,
       type: DataTypes.STRING,
     },
-    category: {
-        type: DataTypes.ENUM("SILVER", "GOLD", "PLATINUM"),
-        defaultValue:CategoryEnum.SILVER,
-        allowNull: false,
-      },
-      seats:{
-        type:DataTypes.INTEGER,
-        allowNull:false,
-      }
+    // category: {
+    //     type: DataTypes.ENUM("SILVER", "GOLD", "PLATINUM"),
+    //     defaultValue:CategoryEnum.SILVER,
+    //     allowNull: false,
+    //   },
+    seats: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
+  },
   {
     timestamps: true,
     underscored: true,

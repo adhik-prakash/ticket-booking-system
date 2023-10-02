@@ -4,11 +4,10 @@ import { MyContext } from "../interface/contextInterface";
 import { TicketEntry } from "../../models/ticketsenrty";
 import { Program } from "../../models/program";
 import { TicketInputInterface } from "../interface/ticketInterface";
-import { count } from "console";
 
 export const ticketResolver = {
   Query: {
-    tickets: async (parents: any, args: any, context: MyContext) => {
+    tickets: async (parent: ParentNode, args: any, context: MyContext) => {
       try {
         if (!context?.user) {
           throw new GraphQLError("Authorization header is missing", {
@@ -36,7 +35,7 @@ export const ticketResolver = {
   },
   Mutation: {
     bookTicket: async (
-      parents: any,
+      parent: ParentNode,
       args: { input: TicketInputInterface },
       context: MyContext
     ) => {
@@ -67,21 +66,20 @@ export const ticketResolver = {
           );
         }
         if (programData.dataValues.seats < counts) {
-          throw new Error("seat is not available");
+          throw new Error("Seats are Housefull please try another Program");
         }
         const ticketEntry = await TicketEntry.create({
           programId,
-          userId:context?.user.id,
+          userId: context?.user.id,
           counts,
-        })
-        await programData.decrement("seats",{by:counts})
+        });
+        // await programData.decrement("seats", { by: counts });
         return {
-          data:ticketEntry,
-          message:"Yo have booked ticket"
-        }
-        
+          data: ticketEntry,
+          message: "You have succesfully booked ticket",
+        };
       } catch (error: any) {
-        throw new Error (error.message)
+        throw new Error(error.message);
       }
     },
   },
