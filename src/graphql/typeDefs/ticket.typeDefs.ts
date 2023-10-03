@@ -5,10 +5,18 @@ type TicketEntry {
     counts: Int
     userId: Int
 }
-type Program {
+
+type TicketWithProgram{
     id: Int
-    # category: CategoryEnum
-    }
+    program: Program
+    counts: Int
+    userId: Int
+}
+
+type TicketResponse{
+    data:[TicketWithProgram]
+}
+
 type BookingResponse {
     data: TicketEntry
     message: String
@@ -23,7 +31,8 @@ input TicketInput {
     counts: Int
 }
 type Query {
-    tickets: [TicketEntry]
+    tickets: TicketResponse
+
 }
 type Mutation {
     bookTicket(input: TicketInput): BookingResponse

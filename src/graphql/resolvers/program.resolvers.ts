@@ -18,7 +18,6 @@ export const programResolver = {
           });
         }
         const allPrograms = await Program.findAll();
-        // console.log(allPrograms);
         return allPrograms;
       } catch (error: any) {
         throw new Error(error.message);
@@ -48,6 +47,7 @@ export const programResolver = {
           programName,
           userId: context.user.id,
         });
+
         return {
           data: newProgram,
           message: "Added new title for program",
@@ -127,6 +127,7 @@ export const programResolver = {
           });
         }
         await deleteProgram.destroy();
+
         return {
           data: deleteProgram,
           message: `program with programId ${id} is deleted sucessfully`,

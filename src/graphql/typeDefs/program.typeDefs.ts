@@ -3,8 +3,8 @@ scalar Date
 type Program {
     id: Int
     programName: String
-    #counts: Int
     seats: Int
+    available_seats:Int
 }
 type ProgramResponse {
     data: Program

@@ -29,4 +29,4 @@ type Mutation {
     register(input: RegisterInput): RegisterResponse
     login(input: LoginInput): LoginResponse
 }
-`
+`;

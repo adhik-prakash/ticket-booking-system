@@ -22,7 +22,6 @@ export const TicketEntry = sequelize.define(
         key: "id",
       },
     },
-
     counts: {
       allowNull: false,
       type: DataTypes.INTEGER,
@@ -35,7 +34,6 @@ export const TicketEntry = sequelize.define(
     freezeTableName: true,
   }
 );
-
 TicketEntry.belongsTo(Program, {
   foreignKey: "programId",
   as: "program",

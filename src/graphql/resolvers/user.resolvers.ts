@@ -44,7 +44,6 @@ export const userResolver = {
           message: "User registered succesfully",
         };
       } catch (error: any) {
-        console.log(error);
         throw new Error(error.message);
       }
     },
@@ -59,7 +58,6 @@ export const userResolver = {
           password!.toString(),
           userLogin?.dataValues?.password
         );
-        // console.log(userLogin.dataValues);
         if (!isValidPassword) {
           throw new Error("Password you entered is incorrect");
         }
@@ -71,7 +69,7 @@ export const userResolver = {
         const token = jwt.sign(payload, process.env.JWT_SECRET_KEY!, {
           expiresIn: "2d",
         });
-        // console.log(payload)
+
         return {
           ...userLogin.dataValues,
           token,

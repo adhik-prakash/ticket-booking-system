@@ -20,13 +20,17 @@ export const ticketResolver = {
           });
         }
         const allTickets: any = await TicketEntry.findAll({
-          include: {
-            model: Program,
-            as: "program",
-          },
+          include: [
+            {
+              model: Program,
+              as: "program",
+            },
+          ],
         });
-        // console.log(allTickets.program)
-        return allTickets;
+
+        return {
+          data: allTickets,
+        };
       } catch (error: any) {
         throw new Error(error.message);
       }
@@ -49,7 +53,6 @@ export const ticketResolver = {
           });
         }
         const { programId, counts } = args.input;
-
         const existingTicketEntry = await TicketEntry.findOne({
           where: {
             programId,
@@ -59,12 +62,30 @@ export const ticketResolver = {
         const programData = await Program.findByPk(programId);
 
         if (!programData) {
-          throw new Error("program data is not found");
+          throw new GraphQLError(
+            "This program  is not found please try another program",
+            {
+              extensions: {
+                code: "NOT FOUND",
+                status: 404,
+                message: "Program is not found",
+              },
+            }
+          );
+        }
+        if (programData.dataValues.available_seats < counts) {
+          throw new GraphQLError(
+            "Seats are Housefull please try another Program",
+            {
+              extensions: {
+                code: "NOT FOUND",
+                status: 404,
+                message: "Seats are Housefull please try another Program",
+              },
+            }
+          );
         }
         if (existingTicketEntry) {
-          if (programData.dataValues.available_seats < counts) {
-            throw new Error("Seats are Housefull please try another Program");
-          }
           let newCounts = existingTicketEntry.dataValues.counts + counts;
           await existingTicketEntry.update({
             counts: newCounts,
@@ -75,7 +96,7 @@ export const ticketResolver = {
 
           return {
             data: existingTicketEntry,
-            message: "You have updated your ticket count sucessfully",
+            message: "You have updated your ticket count Sucessfully",
           };
         }
         if (!programData) {
@@ -90,18 +111,16 @@ export const ticketResolver = {
             }
           );
         }
-        if (programData.dataValues.available_seats < counts) {
-          throw new Error("Seats are Housefull please try another Program");
-        }
         const ticketEntry = await TicketEntry.create({
           programId,
           userId: context?.user.id,
           counts,
         });
         await programData.decrement("available_seats", { by: counts });
+
         return {
           data: ticketEntry,
-          message: "You have succesfully booked ticket",
+          message: `You have succesfully added another count on your ticket`,
         };
       } catch (error: any) {
         throw new Error(error.message);
