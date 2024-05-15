@@ -2,7 +2,7 @@ import { DataTypes, Sequelize } from "sequelize";
 import { sequelize } from "../config";
 import { Program } from "./program";
 export const TicketEntry = sequelize.define(
-  "ticketsenrty",
+  "ticketentries",
   {
     id: {
       allowNull: false,
@@ -30,7 +30,7 @@ export const TicketEntry = sequelize.define(
   {
     timestamps: true,
     underscored: true,
-    tableName: "ticketsenrty",
+    tableName: "ticketentries",
     freezeTableName: true,
   }
 );
